@@ -1,9 +1,14 @@
+import os
 import re
-import telebot  
+import telebot
 from rapidfuzz import fuzz
 
-# بەستەر بۆ بۆت
+# وەرگرتنی Token لە Environment Variables
 TOKEN = os.getenv("BOT_TOKEN")
+
+if TOKEN is None:
+    raise ValueError("BOT_TOKEN نادۆزرێتەوە! لە Koyeb بە Variables زیاد بکە.")
+
 bot = telebot.TeleBot(TOKEN)
 movies = [
 ("Red One","https://kurdsubtitle.net/movies/170190-Red-One"),
