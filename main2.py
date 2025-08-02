@@ -3,8 +3,8 @@ import telebot
 from rapidfuzz import fuzz
 
 # بەستەر بۆ بۆت
-bot = telebot.TeleBot("BOT_TOKEN")
-
+TOKEN = os.getenv("BOT_TOKEN")
+bot = telebot.TeleBot(TOKEN)
 movies = [
 ("Red One","https://kurdsubtitle.net/movies/170190-Red-One"),
 ("Veteran 2","https://kurdsubtitle.net/movies/295237-Veteran-2"),
