@@ -29,7 +29,7 @@ movies = [
 ("My Happy Marriage Season 2","https://kurd-forest.blogspot.com/2025/02/my-happy-marriage-season-2.html"),
 ("Drifters (2016)","https://kurd-forest.blogspot.com/2025/02/drifters-2016.html"),
 ("Possibly the Greatest Alchemist of All Time","https://kurd-forest.blogspot.com/2025/02/possibly-greatest-alchemist-of-all-time.html"),
-("Even Given the Worthless "Appraiser" Class, I'm Actually the Strongest","https://kurd-forest.blogspot.com/2025/02/even-given-worthless-appraiser-class-im.html"),
+("Even Given the Worthless Appraiser Class, I'm Actually the Strongest","https://kurd-forest.blogspot.com/2025/02/even-given-worthless-appraiser-class-im.html"),
 ("Magic Maker: How to Make Magic in Another World","https://kurd-forest.blogspot.com/2025/02/magic-maker-how-to-make-magic-in.html"),
 ("I'm Getting Married to a Girl I Hate in My Class","https://kurd-forest.blogspot.com/2025/02/im-getting-married-to-girl-i-hate-in-my.html"),
 ("I'm a Noble on the Brink of Ruin, So I Might as Well Try Mastering Magic","https://kurd-forest.blogspot.com/2025/02/im-noble-on-brink-of-ruin-so-i-might-as.html"),
