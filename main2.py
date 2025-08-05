@@ -4,7 +4,8 @@ import telebot
 from rapidfuzz import fuzz
 
 # بەستەر بۆ بۆت
-bot = telebot.TeleBot("8018261520:AAG_fdVPK9SHq2JAm-2_wI9wTpwIhopQ6tc")
+TOKEN = os.environ.get("BOT_TOKEN")
+bot = telebot.TeleBot(TOKEN)
 movies = [
 ("The Foolish Angel Dances with the Devil","https://kurd-forest.blogspot.com/2025/06/the-foolish-angel-dances-with-devil.html"),
 ("Saga of Tanya the Evil","https://kurd-forest.blogspot.com/2025/06/saga-of-tanya-evil.html"),
