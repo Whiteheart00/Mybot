@@ -1,12 +1,10 @@
-import telebot
 import os
 import re
-from flask import Flask, request
+import telebot  
 from rapidfuzz import fuzz
 
 # بەستەر بۆ بۆت
-TOKEN = os.environ.get("BOT_TOKEN")
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot("8018261520:AAG_fdVPK9SHq2JAm-2_wI9wTpwIhopQ6tc")
 movies = [
 ("The Foolish Angel Dances with the Devil","https://kurd-forest.blogspot.com/2025/06/the-foolish-angel-dances-with-devil.html"),
 ("Saga of Tanya the Evil","https://kurd-forest.blogspot.com/2025/06/saga-of-tanya-evil.html"),
@@ -17733,11 +17731,10 @@ movies = [
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
 
-#start
+ #فرمانی /start
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.reply_to(message, "بەخێربێی! تەنها ناوی فیلمەکە بنووسە بۆ گەڕان.")
-
 @bot.message_handler(func=lambda message: True)
 def search_movies(message):
     search_term = message.text.strip().lower()
@@ -17750,30 +17747,15 @@ def search_movies(message):
             matches.append((movie, score))
 
     if matches:
+        # دەتوانی ئەم بە شێوەیەی زیر وەشانی بکه‌یت
         response = "فیلمەکان دۆزرایەوە:\n"
+        # جێبەجێکردنی فهرستی فیلمەکان بە نمرەی کەم بە زۆر
         matches = sorted(matches, key=lambda x: x[1], reverse=True)
         for match, score in matches:
             response += f"{match[0]} (Score: {score}): {match[1]}\n"
         bot.reply_to(message, response)
     else:
         bot.reply_to(message, f"ببورە، فیلمی '{search_term}' نەدۆزرایەوە!")
-
-# Flask بۆ webhook
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return "Bot is alive!"
-
-@app.route(f'/{TOKEN}', methods=['POST'])
-def receive_update():
-    json_str = request.get_data().decode('UTF-8')
-    update = telebot.types.Update.de_json(json_str)
-    bot.process_new_updates([update])
-    return "OK", 200
-
-# ستارت کردنی وێب
-if __name__ == '__main__':
-    bot.remove_webhook()
-    bot.set_webhook(url=f"{os.environ['APP_URL']}/{TOKEN}")
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))
+# دامەزراندنی بۆت
+print("بۆت چالاکە...")
+bot.infinity_polling()
