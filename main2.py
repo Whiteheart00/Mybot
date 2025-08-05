@@ -1,6 +1,8 @@
+import telebot
 import os
 import re
-import telebot  
+from flask import Flask
+from threading import Thread
 from rapidfuzz import fuzz
 
 # بەستەر بۆ بۆت
@@ -17732,32 +17734,43 @@ movies = [
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
 
- #فرمانی /start
-@bot.message_handler(commands=['start'])
+ @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.reply_to(message, "بەخێربێی! تەنها ناوی فیلمەکە بنووسە بۆ گەڕان.")
+
 @bot.message_handler(func=lambda message: True)
 def search_movies(message):
     search_term = message.text.strip().lower()
     matches = []
-
     for movie in movies:
         movie_name = re.sub(r"\(.*?\)", "", movie[0]).strip().lower()
         score = fuzz.ratio(search_term, movie_name)
         if score >= 70:
             matches.append((movie, score))
-
     if matches:
-        # دەتوانی ئەم بە شێوەیەی زیر وەشانی بکه‌یت
         response = "فیلمەکان دۆزرایەوە:\n"
-        # جێبەجێکردنی فهرستی فیلمەکان بە نمرەی کەم بە زۆر
         matches = sorted(matches, key=lambda x: x[1], reverse=True)
         for match, score in matches:
             response += f"{match[0]} (Score: {score}): {match[1]}\n"
         bot.reply_to(message, response)
     else:
         bot.reply_to(message, f"ببورە، فیلمی '{search_term}' نەدۆزرایەوە!")
-# دامەزراندنی بۆت
-print("بۆت چالاکە...")
-bot.remove_webhook()
-bot.infinity_polling()
+
+# ✅ بۆ راضی کردنی health check
+app = Flask("")
+
+@app.route('/')
+def home():
+    return "Bot is alive!", 200
+
+def run():
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+def start_bot():
+    bot.infinity_polling()
+
+if __name__ == "__main__":
+    # server for health check
+    Thread(target=run).start()
+    # start telegram bot
+    start_bot()
