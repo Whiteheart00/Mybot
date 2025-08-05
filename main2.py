@@ -17735,18 +17735,21 @@ movies = [
     ("Alice, Darling (2022)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8629"),
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
-@bot.message_handler(commands=['start'])
+@bot.message_handler(func=lambda m: True)
+def catch_all_messages(message):
+    sender_id = message.from_user.id
+    sender_username = message.from_user.username or "بەکارهێنەری نەناسراو"
+
+    # ئەگەر نێرەر هەڵمەتە و بۆتەکەت UID ـی تۆی بزانێ، بۆ تۆ بڵێ:
+    if sender_id != OWNER_UID:
+        # ناردنی نامە بۆ خاوەن بۆت (تۆ) سەبارەت بە ئەو کەسەی پەیامی ناردووە
+        bot.send_message(OWNER_UID, f"📥 بەکارهێنەرێک پەیام نارد:\nUsername: @{sender_username}")
 def send_welcome(message):
     username = message.from_user.username
     welcome_text = (
         "👋 بەخێربێت لێرە دەتوانیت فیلم و زنجیرە ژێرنووسکراوەکان بدۆزیتەوە.\n"
         "⚠️ تەنها بە ناوی ڕاستەقینەی فیلمەکان بگەڕێ، چونکە وێبسایتەکان ناوی ڕاستەقینە دەنوسن."
     )
-    if username:
-        welcome_text += f"\n\n🙂 سڵاو @{username}!"
-    else:
-        welcome_text += "\n\n🙂 سڵاو بەکارهێنەری نەناسراو!"
-
     bot.reply_to(message, welcome_text)
     # بەخێربێت بۆ بەکارهێنەر
     bot.reply_to(message, f"سڵاو {first_name} 👋\nبەخێربێیت بۆ بۆتەکەم، تەنیا ناوی فیلم بنووسە تا لینکی فیلمەکە بۆ بنێرم.")
