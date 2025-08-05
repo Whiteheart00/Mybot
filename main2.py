@@ -17735,12 +17735,19 @@ movies = [
     ("Alice, Darling (2022)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8629"),
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
-# 📩 پەیام بەکارهێنەر + ئاگاداری بۆ خاوەن بۆت
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    first_name = message.from_user.first_name
-    user_id = message.from_user.id
+    username = message.from_user.username
+    welcome_text = (
+        "👋 بەخێربێت لێرە دەتوانیت فیلم و زنجیرە ژێرنووسکراوەکان بدۆزیتەوە.\n"
+        "⚠️ تەنها بە ناوی ڕاستەقینەی فیلمەکان بگەڕێ، چونکە وێبسایتەکان ناوی ڕاستەقینە دەنوسن."
+    )
+    if username:
+        welcome_text += f"\n\n🙂 سڵاو @{username}!"
+    else:
+        welcome_text += "\n\n🙂 سڵاو بەکارهێنەری نەناسراو!"
 
+    bot.reply_to(message, welcome_text)
     # بەخێربێت بۆ بەکارهێنەر
     bot.reply_to(message, f"سڵاو {first_name} 👋\nبەخێربێیت بۆ بۆتەکەم، تەنیا ناوی فیلم بنووسە تا لینکی فیلمەکە بۆ بنێرم.")
 
