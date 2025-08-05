@@ -17735,27 +17735,31 @@ movies = [
     ("Alice, Darling (2022)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8629"),
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
-@bot.message_handler(func=lambda m: True)
-def catch_all_messages(message):
-    sender_id = message.from_user.id
-    sender_username = message.from_user.username or "بەکارهێنەری نەناسراو"
-
-    # ئەگەر نێرەر هەڵمەتە و بۆتەکەت UID ـی تۆی بزانێ، بۆ تۆ بڵێ:
-    if sender_id != OWNER_UID:
-        # ناردنی نامە بۆ خاوەن بۆت (تۆ) سەبارەت بە ئەو کەسەی پەیامی ناردووە
-        bot.send_message(OWNER_UID, f"📥 بەکارهێنەرێک پەیام نارد:\nUsername: @{sender_username}")
+# 📥 هەر کەس پەیامێک بنێرێت، بۆتەکەت ئاگاداری تۆ دەکات
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    username = message.from_user.username
+    user_id = message.from_user.id
+    username = message.from_user.username or "بەکارهێنەری نەناسراو"
+    first_name = message.from_user.first_name or "ناونیشان نەبوو"
+
     welcome_text = (
         "👋 بەخێربێت لێرە دەتوانیت فیلم و زنجیرە ژێرنووسکراوەکان بدۆزیتەوە.\n"
-        "⚠️ تەنها بە ناوی ڕاستەقینەی فیلمەکان بگەڕێ، چونکە وێبسایتەکان ناوی ڕاستەقینە دەنوسن."
+        "⚠️ تەنها بە ناوی ڕاستەقینەی فیلمەکان بگەڕێ، چونکە وێبسایتەکان ناوی ڕاستەقینە دەنوسن.\n\n"
+        f"سڵاو {first_name} 👋\nتەنیا ناوی فیلم بنووسە تا لینکی فیلمەکە بۆ بنێرم."
     )
     bot.reply_to(message, welcome_text)
-    # بەخێربێت بۆ بەکارهێنەر
-    bot.reply_to(message, f"سڵاو {first_name} 👋\nبەخێربێیت بۆ بۆتەکەم، تەنیا ناوی فیلم بنووسە تا لینکی فیلمەکە بۆ بنێرم.")
 
-    # ناردنی ئاگاداری بۆ خاوەن بۆت
-    bot.send_message(OWNER_ID, f"👤 بەکارهێنەری نوێ: {first_name} (ID: {user_id}) بۆتەکە بەکار هێنا.")
+    # ناردنی ئاگاداری بۆ تۆ
+    bot.send_message(OWNER_ID, f"👤 بەکارهێنەری نوێ: @{username} / {first_name} (ID: {user_id}) بۆتەکە بەکار هێنا.")
+
+@bot.message_handler(func=lambda message: True)
+def search_movies(message):
+    user_id = message.from_user.id
+    username = message.from_user.username or "بەکارهێنەری نەناسراو"
+
+    # ناردنی زانیاری پەیام بۆ خاوەن بۆت
+    if user_id != OWNER_ID:
+        bot.send_message(OWNER_ID, f"📥 پەیام لە لایەن @{username} نێردرا.")
 @bot.message_handler(func=lambda message: True)
 def search_movies(message):
     search_term = message.text.strip().lower()
