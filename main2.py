@@ -17733,8 +17733,7 @@ movies = [
     ("Alice, Darling (2022)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8629"),
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
-
- @bot.message_handler(commands=['start'])
+@bot.message_handler(commands=['start'])
 def start_message(message):
     bot.reply_to(message, "بەخێربێی! تەنها ناوی فیلمەکە بنووسە بۆ گەڕان.")
 
