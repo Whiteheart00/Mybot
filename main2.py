@@ -17759,4 +17759,5 @@ def search_movies(message):
         bot.reply_to(message, f"ببورە، فیلمی '{search_term}' نەدۆزرایەوە!")
 # دامەزراندنی بۆت
 print("بۆت چالاکە...")
+bot.remove_webhook()
 bot.infinity_polling()
