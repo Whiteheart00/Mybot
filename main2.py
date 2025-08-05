@@ -17735,7 +17735,7 @@ movies = [
     ("Alice, Darling (2022)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8629"),
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
-# 📥 هەر کەس پەیامێک بنێرێت، بۆتەکەت ئاگاداری تۆ دەکات
+# 📌 Welcome + ئاگاداری
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     user_id = message.from_user.id
@@ -17749,36 +17749,37 @@ def send_welcome(message):
     )
     bot.reply_to(message, welcome_text)
 
-    # ناردنی ئاگاداری بۆ تۆ
-    bot.send_message(OWNER_ID, f"👤 بەکارهێنەری نوێ: @{username} / {first_name} (ID: {user_id}) بۆتەکە بەکار هێنا.")
+    if user_id != OWNER_ID:
+        bot.send_message(OWNER_ID, f"👤 بەکارهێنەری نوێ: @{username} / {first_name} (ID: {user_id}) بۆتەکە بەکار هێنا.")
 
+# 📥 گەڕان + ناردنی ئاگاداری
 @bot.message_handler(func=lambda message: True)
-def search_movies(message):
+def handle_messages(message):
     user_id = message.from_user.id
     username = message.from_user.username or "بەکارهێنەری نەناسراو"
-
-    # ناردنی زانیاری پەیام بۆ خاوەن بۆت
-    if user_id != OWNER_ID:
-        bot.send_message(OWNER_ID, f"📥 پەیام لە لایەن @{username} نێردرا.")
-@bot.message_handler(func=lambda message: True)
-def search_movies(message):
     search_term = message.text.strip().lower()
+
+    if user_id != OWNER_ID:
+        bot.send_message(OWNER_ID, f"📥 پەیام لە لایەن @{username} نێردرا:\n{search_term}")
+
+    # گەڕانی فیلم
     matches = []
     for movie in movies:
         movie_name = re.sub(r"\(.*?\)", "", movie[0]).strip().lower()
         score = fuzz.ratio(search_term, movie_name)
         if score >= 70:
             matches.append((movie, score))
+
     if matches:
-        response = "فیلمەکان دۆزرایەوە:\n"
+        response = "🎬 فیلمەکان دۆزرایەوە:\n"
         matches = sorted(matches, key=lambda x: x[1], reverse=True)
         for match, score in matches:
-            response += f"{match[0]} (Score: {score}): {match[1]}\n"
+            response += f"{match[0]} ➤ {match[1]}\n"
         bot.reply_to(message, response)
     else:
-        bot.reply_to(message, f"ببورە، فیلمی '{search_term}' نەدۆزرایەوە!")
+        bot.reply_to(message, f"❌ فیلمی '{search_term}' نەدۆزرایەوە!")
 
-# ✅ بۆ راضی کردنی health check
+# ✅ Health Check
 app = Flask("")
 
 @app.route('/')
@@ -17792,7 +17793,5 @@ def start_bot():
     bot.infinity_polling()
 
 if __name__ == "__main__":
-    # server for health check
     Thread(target=run).start()
-    # start telegram bot
     start_bot()
