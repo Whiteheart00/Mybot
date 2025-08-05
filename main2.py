@@ -8,6 +8,8 @@ from rapidfuzz import fuzz
 # بەستەر بۆ بۆت
 TOKEN = os.environ.get("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
+# 🔔 UID ـی خاوەن بۆتەکە — بگۆڕە بە UID خۆت
+OWNER_ID = 1360774441
 movies = [
 ("The Foolish Angel Dances with the Devil","https://kurd-forest.blogspot.com/2025/06/the-foolish-angel-dances-with-devil.html"),
 ("Saga of Tanya the Evil","https://kurd-forest.blogspot.com/2025/06/saga-of-tanya-evil.html"),
@@ -17733,10 +17735,17 @@ movies = [
     ("Alice, Darling (2022)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8629"),
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
+# 📩 پەیام بەکارهێنەر + ئاگاداری بۆ خاوەن بۆت
 @bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.reply_to(message, "بەخێربێی! تەنها ناوی فیلمەکە بنووسە بۆ گەڕان.")
+def send_welcome(message):
+    first_name = message.from_user.first_name
+    user_id = message.from_user.id
 
+    # بەخێربێت بۆ بەکارهێنەر
+    bot.reply_to(message, f"سڵاو {first_name} 👋\nبەخێربێیت بۆ بۆتەکەم، تەنیا ناوی فیلم بنووسە تا لینکی فیلمەکە بۆ بنێرم.")
+
+    # ناردنی ئاگاداری بۆ خاوەن بۆت
+    bot.send_message(OWNER_ID, f"👤 بەکارهێنەری نوێ: {first_name} (ID: {user_id}) بۆتەکە بەکار هێنا.")
 @bot.message_handler(func=lambda message: True)
 def search_movies(message):
     search_term = message.text.strip().lower()
