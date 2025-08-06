@@ -17760,11 +17760,8 @@ def handle_messages(message):
 
     if user_id != OWNER_ID:
         bot.send_message(OWNER_ID, f"📥 پەیام لە لایەن @{username} نێردرا:\n{search_term}")
-@bot.message_handler(func=lambda message: True)
-def search_movies(message):
-    search_term = message.text.strip().lower()
+# گەڕانی فیلم
     matches = []
-
     for movie in movies:
         movie_name = re.sub(r"\(.*?\)", "", movie[0]).strip().lower()
         score = fuzz.ratio(search_term, movie_name)
@@ -17772,15 +17769,13 @@ def search_movies(message):
             matches.append((movie, score))
 
     if matches:
-        # دەتوانی ئەم بە شێوەیەی زیر وەشانی بکه‌یت
-        response = "فیلمەکان دۆزرایەوە:\n"
-        # جێبەجێکردنی فهرستی فیلمەکان بە نمرەی کەم بە زۆر
+        response = "🎬 فیلمەکان دۆزرایەوە:\n"
         matches = sorted(matches, key=lambda x: x[1], reverse=True)
         for match, score in matches:
-            response += f"{match[0]} (Score: {score}): {match[1]}\n"
+            response += f"{match[0]} ➤ {match[1]}\n"
         bot.reply_to(message, response)
     else:
-        bot.reply_to(message, f"ببورە، فیلمی '{search_term}' نەدۆزرایەوە!")
+        bot.reply_to(message, f"❌ فیلمی '{search_term}' نەدۆزرایەوە!")
 # دامەزراندنی بۆت
 print("بۆت چالاکە...")
 bot.infinity_polling()
