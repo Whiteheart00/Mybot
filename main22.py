@@ -17735,6 +17735,29 @@ movies = [
 @bot.message_handler(commands=['start'])
 def start_message(message):
     bot.reply_to(message, "بەخێربێی! تەنها ناوی فیلمەکە بنووسە بۆ گەڕان.")
+# فرمانی /info بۆ وەرگرتنی زانیاری بەکارهێنەر
+@bot.message_handler(commands=['info'])
+def user_info(message):
+    user = message.from_user
+    user_id = user.id
+    first_name = user.first_name or "نەزانراو"
+    last_name = user.last_name or ""
+    username = user.username or "username نیە"
+    
+    info_text = f"""
+زانیاری بەکارهێنەر:
+🆔 UID: {user_id}
+👤 ناو: {first_name} {last_name}
+📱 Username: @{username}
+    """
+    
+    bot.reply_to(message, info_text)
+
+# فرمانی /myid بۆ وەرگرتنی تەنها UID
+@bot.message_handler(commands=['myid'])
+def get_user_id(message):
+    user_id = message.from_user.id
+    bot.reply_to(message, f"UID ت: {user_id}")
 @bot.message_handler(func=lambda message: True)
 def search_movies(message):
     search_term = message.text.strip().lower()
