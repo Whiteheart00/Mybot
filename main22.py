@@ -1,10 +1,13 @@
+import telebot
 import os
 import re
-import telebot  
+from flask import Flask
+from threading import Thread
 from rapidfuzz import fuzz
-
 # بەستەر بۆ بۆت
 bot = telebot.TeleBot("8018261520:AAG_fdVPK9SHq2JAm-2_wI9wTpwIhopQ6tc")
+# 🔔 UID ـی خاوەن بۆتەکە — بگۆڕە بە UID خۆت
+OWNER_ID = 1360774441
 movies = [
 ("The Foolish Angel Dances with the Devil","https://kurd-forest.blogspot.com/2025/06/the-foolish-angel-dances-with-devil.html"),
 ("Saga of Tanya the Evil","https://kurd-forest.blogspot.com/2025/06/saga-of-tanya-evil.html"),
@@ -17731,33 +17734,32 @@ movies = [
     ("Shaolin Soccer (2001)", "https://www.kurdcinama.com/moves-details.aspx?movieid=8628")
    ]
 
-# فرمانی /start
+# 📌 Welcome + ئاگاداری
 @bot.message_handler(commands=['start'])
-def start_message(message):
-    bot.reply_to(message, "بەخێربێی! تەنها ناوی فیلمەکە بنووسە بۆ گەڕان.")
-# فرمانی /info بۆ وەرگرتنی زانیاری بەکارهێنەر
-@bot.message_handler(commands=['info'])
-def user_info(message):
-    user = message.from_user
-    user_id = user.id
-    first_name = user.first_name or "نەزانراو"
-    last_name = user.last_name or ""
-    username = user.username or "username نیە"
-    
-    info_text = f"""
-زانیاری بەکارهێنەر:
-🆔 UID: {user_id}
-👤 ناو: {first_name} {last_name}
-📱 Username: @{username}
-    """
-    
-    bot.reply_to(message, info_text)
-
-# فرمانی /myid بۆ وەرگرتنی تەنها UID
-@bot.message_handler(commands=['myid'])
-def get_user_id(message):
+def send_welcome(message):
     user_id = message.from_user.id
-    bot.reply_to(message, f"UID ت: {user_id}")
+    username = message.from_user.username or "بەکارهێنەری نەناسراو"
+    first_name = message.from_user.first_name or "ناونیشان نەبوو"
+
+    welcome_text = (
+        "👋 بەخێربێت لێرە دەتوانیت فیلم و زنجیرە ژێرنووسکراوەکان بدۆزیتەوە.\n"
+        "⚠️ تەنها بە ناوی ڕاستەقینەی فیلمەکان بگەڕێ، چونکە وێبسایتەکان ناوی ڕاستەقینە دەنوسن.\n\n"
+        f"سڵاو {first_name} 👋\nتەنیا ناوی فیلم بنووسە تا لینکی فیلمەکە بۆ بنێرم."
+    )
+    bot.reply_to(message, welcome_text)
+
+    if user_id != OWNER_ID:
+        bot.send_message(OWNER_ID, f"👤 بەکارهێنەری نوێ: @{username} / {first_name} (ID: {user_id}) بۆتەکە بەکار هێنا.")
+
+# 📥 گەڕان + ناردنی ئاگاداری
+@bot.message_handler(func=lambda message: True)
+def handle_messages(message):
+    user_id = message.from_user.id
+    username = message.from_user.username or "بەکارهێنەری نەناسراو"
+    search_term = message.text.strip().lower()
+
+    if user_id != OWNER_ID:
+        bot.send_message(OWNER_ID, f"📥 پەیام لە لایەن @{username} نێردرا:\n{search_term}")
 @bot.message_handler(func=lambda message: True)
 def search_movies(message):
     search_term = message.text.strip().lower()
